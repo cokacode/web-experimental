@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eyedropper API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .colors {
+            width: 200px;
+            height: 200px;
+            margin: 40px 20px;
+            background-color: brown;
+            border: 3px solid #323232;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        p {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .container button {
+            width: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>System Wide Color Picker</h1>
+        <div class="colors">
+            <p>Open the color picker by clicking the button below.</p>
+        </div>
+        <button>Open ColorPicker</button>
+
+    </div>
+    <script>
+        if (!window.EyeDropper) {
+            alert("Sorry, this is an experimental technology that is not supported by your browser yet.");
+        }
+        let button = document.querySelector("button");
+        let box = document.querySelector(".colors");
+        let texti = box.querySelector("p");
+        console.log(texti);
+        button.addEventListener("click", (e) => {
+            let ed = new EyeDropper();
+            ed.open().then(val => {
+                box.style.backgroundColor = val.sRGBHex;
+                console.log(invertColor(val.sRGBHex));
+                texti.style.color = invertColor(val.sRGBHex);
+                texti.innerText = val.sRGBHex;
+            }).catch(err => {
+                console.error(err);
+            })
+        });
+
+        function invertColor(color) {
+            let ar = color.split("").splice(1, 6);
+            let first = (255 - Number.parseInt(`${ar[0]}${ar[1]}`, 16)).toString(16);
+            let sec = (255 - Number.parseInt(`${ar[2]}${ar[3]}`, 16)).toString(16);
+            let th = (255 - Number.parseInt(`${ar[4]}${ar[4]}`, 16)).toString(16);
+            return `#${first}${sec}${th}`;
+        }
+    </script>
+</body>
+
+</html>
